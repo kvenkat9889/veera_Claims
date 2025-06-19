@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: admin123
       POSTGRES_DB: claims_portal
     ports:
-      - "5449:5432"
+      - "5202:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -20,7 +20,7 @@ services:
     build: ./Backend
     container_name: veera_claims_backend
     ports:
-      - "3022:3022"
+      - "3102:3102"
     depends_on:
       - postgres
     networks:
@@ -30,7 +30,7 @@ services:
     build: ./Frontend
     container_name: veera_claims_frontend
     ports:
-      - "9034:80"
+      - "8204:80"
     networks:
       - veera_claims_net
 
@@ -38,7 +38,7 @@ services:
     build: ./HR
     container_name: veera_claims_hr1
     ports:
-      - "9035:80"
+      - "8205:80"
     networks:
       - veera_claims_net
 
