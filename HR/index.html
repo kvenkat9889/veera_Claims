@@ -738,16 +738,20 @@
       }, 3000);
     }
     
-    async function fetchClaims() {
-      try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error('Failed to fetch claims');
-        return await response.json();
-      } catch (err) {
-        showNotification('Error fetching claims', true);
-        return [];
-      }
+  async function fetchClaims() {
+  try {
+    const response = await fetch(API_URL);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || 'Failed to fetch claims');
     }
+    return await response.json();
+  } catch (err) {
+    console.error('Error fetching claims:', err);
+    showNotification(err.message || 'Error fetching claims. Please try again later.', true);
+    return [];
+  }
+}
     
     async function fetchClaimById(claimId) {
       try {

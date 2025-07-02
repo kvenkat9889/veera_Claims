@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: veera-claims-postgres
+    environment:
+      POSTGRES_DB: claims_portal
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "6640:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build: ./Backend
+    container_name: veera-claims-backend
+    ports:
+      - "3640:3640"
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_USER: postgres
+      DB_PASSWORD: admin123
+      DB_NAME: claims_portal
+      DB_PORT: 5432
+    volumes:
+      - ./Backend:/app
+    restart: unless-stopped
+
+  frontend:
+    build: ./Frontend
+    container_name: veera-claims-frontend
+    ports:
+      - "7600:80"
+    restart: unless-stopped
+
+  hr:
+    build: ./HR
+    container_name: veera-claims-hr
+    ports:
+      - "7601:80"
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+
